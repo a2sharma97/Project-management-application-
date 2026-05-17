@@ -1,0 +1,13 @@
+export type ActivityAction = 
+    | 'TASK_CREATED' 
+    | 'TASK_DELETED' 
+    | 'TASK_UPDATED' 
+    | 'STATUS_UPDATED' 
+    | 'MEMBER_JOINED'
+    | 'MEMBER_ROLE_UPDATED'
+    | 'INVITE_REJECTED' 
+    | 'MEMBER_LEFT' 
+    | 'MEMBER_REMOVED'
+    | 'INVITE_SENT'
+    | 'PROJECT_CREATED'
+    | 'PROJECT_STATUS_UPDATED';
