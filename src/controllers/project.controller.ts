@@ -68,7 +68,7 @@ export const getUserProjects = async(req: Request, res:Response) => {
             return res.status(401).json({success: false, message: "Unauthorized access"})
         }
 
-        
+        // Record tells TypeScript — this object has string keys with unknown values. Mongoose accepts it without complaint.
         const query: Record<string, unknown> = {
             $or: [
                 {owner: userId},
@@ -97,6 +97,34 @@ export const getUserProjects = async(req: Request, res:Response) => {
     } catch (error) {
      console.error("GET_USER_PROJECTS_ERROR", error)
      return res.status(500).json({success: false, message: "Internal Server Error"})   
+    }
+}
+
+// Get project by ID
+
+export const getProjectById = async (req: Request, res: Response) => {
+    try {
+        const {projectId} = req.params as {projectId: string}
+        const userId = req.user?._id
+
+        if(!userId) {
+            return res.status(401).json({success: false, message: "Unauthorized access"})
+        }
+
+        if(!mongoose.Types.ObjectId.isValid(projectId as string)) {
+            return res.status(400).json({success: false, message: "Invalid project ID"})
+        }
+
+        const project = await Project.findById(projectId)
+        if(!project) {
+            return res.status(404).json({success: false, message: "Project not found"})
+        }
+
+        return res.status(200).json({success: true, message: "Project fetch successfully", data: project})
+
+    } catch (error) {
+        console.error("GET_PROJECT_BY_ID_ERROR", error)
+        return res.status(500).json({success: false, message: "Internal Server Error"})
     }
 }
 
