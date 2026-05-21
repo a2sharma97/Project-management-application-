@@ -116,8 +116,16 @@ export const getProjectById = async (req: Request, res: Response) => {
         }
 
         const project = await Project.findById(projectId)
+        .populate('owner','fullName email')
+        .populate('members.user', 'fullName email')
         if(!project) {
             return res.status(404).json({success: false, message: "Project not found"})
+        }
+
+        const isOwner = project.owner.equals(userId)
+        const isMember = project.members.some(m => m.user.equals(userId))
+        if(!isOwner && !isMember) {
+            return res.json(403).json({success: false, message: "Only owner and admin can fetch the project."})
         }
 
         return res.status(200).json({success: true, message: "Project fetch successfully", data: project})
