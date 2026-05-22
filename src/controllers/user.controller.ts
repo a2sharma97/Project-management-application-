@@ -103,3 +103,19 @@ export const logout = async (req: Request, res: Response) => {
         return res.status(500).json({success: false, message: "Internal Server Error"})
     }
 }
+
+export const getMe = async (req: Request, res: Response) => {
+    try {
+        const user = req.user
+
+        if(user) {
+            return res.status(401).json({success: false, message: "Unauthorized access"})
+        }
+
+        return res.status(200).json({success: true, message: "User fetched successfully", data: user})
+
+    } catch (error) {
+        console.error("GET_ME_ERROR", error)
+        return res.status(500).json({success: false, message: "Internal Server Error"})
+    }
+}
