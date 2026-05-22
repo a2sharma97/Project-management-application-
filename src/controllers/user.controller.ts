@@ -108,7 +108,7 @@ export const getMe = async (req: Request, res: Response) => {
     try {
         const user = req.user
 
-        if(user) {
+        if(!user) {
             return res.status(401).json({success: false, message: "Unauthorized access"})
         }
 
