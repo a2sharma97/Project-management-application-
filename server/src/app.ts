@@ -19,8 +19,22 @@ const app: Application = express()
 
 const PORT = Number(process.env.PORT) || 3000
 
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    process.env.CLIENT_URL || ''
+].filter(Boolean)
+
 app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: (origin, callback) => {
+        if(!origin) return callback(null, true)
+
+        if(allowedOrigins.includes(origin)) {
+            callback(null, true)
+        } else {
+            callback(new Error(`CORS blocked: ${origin}`))
+        }
+    },
     credentials: true
 }))
 app.use(express.json({limit: '100kb'}))
